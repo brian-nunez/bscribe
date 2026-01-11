@@ -5,19 +5,16 @@ import (
 	"strings"
 	"time"
 	"github.com/brian-nunez/bscribe/views/components/badge"
-	"github.com/brian-nunez/bscribe/views/components/button"
 
 	icons "github.com/bryanvaz/go-templ-lucide-icons"
 )
 
-// TranscriptionSegment represents one segment of the transcribed audio.
 type TranscriptionSegment struct {
 	Start float64 `json:"start"`
 	End   float64 `json:"end"`
 	Text  string  `json:"text"`
 }
 
-// TranscriptionResponse is the expected JSON structure from the inference service.
 type TranscriptionResponse struct {
 	Segments []TranscriptionSegment `json:"segments"`
 	Text     string                 `json:"text"`
@@ -174,8 +171,6 @@ func formatTimestamp(seconds float64) string {
 	return fmt.Sprintf("%02d:%02d:%02d,%03d", h, m, s, ms)
 }
 
-// --- Unchanged components below ---
-
 templ Navbar() {
 	<nav class="w-full border-b border-gray-200 dark:border-white/10 backdrop-blur-md fixed top-0 z-50 bg-background-light/80 dark:bg-background-dark/80">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -186,21 +181,12 @@ templ Navbar() {
 					</div>
 					<span class="font-bold text-xl tracking-tight font-display">Audio<span class="text-primary">Scribe</span></span>
 				</div>
-				<div class="hidden md:flex space-x-8">
-					@NavLink("Upload", "#", true)
-					@NavLink("My Transcripts", "#", false)
-					@NavLink("Profile", "#", false)
+				<div class="md:flex space-x-2">
+					@NavLink("Github", "https://github.com/brian-nunez", false)
+					@NavLink("LinkedIn", "https://www.linkedin.com/in/brianjnunez/", false)
 				</div>
-				<div class="flex items-center gap-4">
-					@button.Button(button.Props{
-						ID:      "theme-toggle",
-						Variant: button.VariantGhost,
-						Class:   "rounded-full p-2 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400",
-					}) {
-						@icons.Sun(templ.Attributes{"class": "w-5 h-5"})
-					}
-					<div class="hidden md:block font-bold text-sm">Brian Nunez</div>
-					<img alt="User Profile" class="h-8 w-8 rounded-full border border-gray-200 dark:border-gray-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5K_SuhM_ToBjouQZwRdYrjhGmncjyqE7T5lFWSOLfLggMUKn9Zr28BJg0sTrpNWyOUO1Z7-DZW1TD1ChwslnBp2EY8hlntoRr5KaCMaNqksq7l4jfIbbTMRioqtlQ4sjdlwMTEXU10MyzfvWPpDoGD9tTqn1BXjyxDuQKal--pob8CUAHM2b7HmWO_zxYl9r7nbC3KIJrr0zwk_AXqQWkiWgMiJ3wtcJpfjAec68h9RJ3UgVMFdMAM2bp1zf1Yso2XJIkC7bMwQ"/>
+				<div>
+					<div class="md:block font-bold text-sm">Brian Nunez</div>
 				</div>
 			</div>
 		</div>
@@ -210,11 +196,11 @@ templ Navbar() {
 templ StatsRow() {
 	<div class="mt-20 w-full border-t border-gray-200 dark:border-white/10 pt-10">
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-			@StatItem("15", "Files Transcribed")
+			@StatItem("30", "Files Transcribed")
 			<div class="border-l-0 md:border-l md:border-r border-gray-200 dark:border-white/10 px-8">
 				@StatItem("120+", "Minutes Total")
 			</div>
-			@StatItem("99%", "Avg. Accuracy")
+			@StatItem("90%", "Avg. Accuracy")
 		</div>
 	</div>
 }
@@ -229,6 +215,7 @@ templ StatItem(value, label string) {
 templ NavLink(text, href string, active bool) {
 	<a
 		href={ templ.SafeURL(href) }
+		target="_blank"
 		class={ "font-medium transition-colors", 
 		templ.KV("text-gray-900 dark:text-white hover:text-primary", active),
 		templ.KV("text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-white", !active) }
@@ -240,10 +227,10 @@ templ NavLink(text, href string, active bool) {
 templ Footer() {
 	<footer class="border-t border-gray-200 dark:border-white/10 bg-background-light dark:bg-background-dark py-6">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-			<p class="text-sm text-gray-500 dark:text-gray-500">© 2023 AudioScribe AI. All rights reserved.</p>
+			<p class="text-sm text-gray-500 dark:text-gray-500">© 2025 Brian Nunez. All rights reserved.</p>
 			<div class="flex gap-6">
-				<a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">GitHub</a>
-				<a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Twitter</a>
+				<a href="https://github.com/brian-nunez" target="_blank" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">GitHub</a>
+				<a href="https://www.linkedin.com/in/brianjnunez/" target="_blank" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">LinkedIn</a>
 			</div>
 		</div>
 	</footer>

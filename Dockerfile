@@ -1,47 +1,38 @@
 # Build stage
 FROM golang:1.23-alpine AS builder
 
-# 1. Install Node.js and NPM
-# This is much more stable on Alpine/ARM64 than the standalone binary
-RUN apk add --no-cache nodejs npm
-
-# Install templ
+# Install templ for code generation
 RUN go install github.com/a-h/templ/cmd/templ@v0.3.924
 
 WORKDIR /app
 
-# Copy go module files
+# Copy go module files and download dependencies
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
+# Copy the entire source code
 COPY . .
 
-# 2. Install Tailwind CSS via NPM
-# We install it locally to ensure we get the correct version compatible with your CSS
-RUN npm install -D tailwindcss @tailwindcss/cli
-
-# Generate templ files
-RUN templ generate
-
-# 3. Generate CSS using npx
-# This runs the JS version of Tailwind, avoiding the binary crash
-RUN npx tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --minify
-
-# Build the application
-RUN go build -o main cmd/main.go
+# Build the Go application for linux/amd64
+RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /app/main ./cmd/main.go
 
 # Final stage
 FROM alpine:latest
 
 WORKDIR /app
 
-# Copy binary and assets
+# Copy the compiled binary from the builder stage
 COPY --from=builder /app/main .
+
+# Copy the entire assets directory, which includes the pre-built output.css
 COPY --from=builder /app/assets ./assets
 
-# Expose port
+# Expose the application port
 EXPOSE 8080
+
+# Set environment variables for production
+ARG TRANSCRIPTION_SERVICE_URL
+ENV TRANSCRIPTION_SERVICE_URL=${TRANSCRIPTION_SERVICE_URL}
 
 # Run the application
 CMD ["./main"]
