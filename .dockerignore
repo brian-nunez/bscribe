@@ -1,0 +1,6 @@
+.git
+.idea
+tmp
+vendor
+assets/*.iso
+assets/yt-dlp_macos
