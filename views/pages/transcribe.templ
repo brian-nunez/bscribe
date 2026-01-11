@@ -2,6 +2,8 @@ package pages
 
 import (
 	"fmt"
+	"strings"
+	"time"
 	"github.com/brian-nunez/bscribe/views/components/badge"
 	"github.com/brian-nunez/bscribe/views/components/button"
 
@@ -124,35 +126,51 @@ templ TranscriptionProgress(filename string) {
 // TranscriptionResult is the final display of the transcribed text.
 templ TranscriptionResult(filename string, data TranscriptionResponse) {
 	<div class="w-full max-w-4xl text-left">
-		<h2 class="text-3xl font-bold mb-6">Transcription for <span class="text-primary">{ filename }</span></h2>
-		<div class="bg-white dark:bg-surface-dark p-6 rounded-lg shadow-lg">
-			if data.Text == "" && len(data.Segments) == 0 {
-				<p class="text-red-500">The transcription service returned an empty or invalid result.</p>
+		<div class="flex justify-between items-center mb-6">
+			<h2 class="text-3xl font-bold">Transcription Result</h2>
+			<span class="text-sm font-medium text-gray-500 bg-gray-100 dark:bg-gray-800 py-1 px-3 rounded-lg">{ filename }</span>
+		</div>
+		<div class="bg-white dark:bg-surface-dark p-6 rounded-lg shadow-lg max-w-none">
+			if strings.HasPrefix(data.Text, "Error:") {
+				<p class="text-red-500 font-medium">{ data.Text }</p>
 			} else if len(data.Segments) > 0 {
-				<div class="space-y-4">
-					for _, segment := range data.Segments {
-						<div class="flex items-start space-x-4">
-							<div class="font-mono text-sm text-gray-500 dark:text-gray-400 w-28 flex-shrink-0">
-								{ formatTimestamp(segment.Start) }
-							</div>
-							<p class="font-mono text-sm text-gray-800 dark:text-gray-200">
-								{ segment.Text }
-							</p>
-						</div>
-					}
-				</div>
+				<table class="w-full text-left">
+					<thead>
+						<tr>
+							<th class="p-2 w-56 font-medium text-gray-600 dark:text-gray-300">Time Range</th>
+							<th class="p-2 font-medium text-gray-600 dark:text-gray-300">Text</th>
+						</tr>
+					</thead>
+					<tbody class="align-top">
+						for _, segment := range data.Segments {
+							<tr class="border-t border-gray-200 dark:border-gray-700">
+								<td class="p-2 font-mono text-sm text-gray-500 whitespace-nowrap">
+									{ formatTimestamp(segment.Start) } --> { formatTimestamp(segment.End) }
+								</td>
+								<td class="p-2 text-gray-800 dark:text-gray-200">{ segment.Text }</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			} else if data.Text != "" {
+				<p class="whitespace-pre-wrap">{ data.Text }</p>
 			} else {
-				<p class="font-mono text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{ data.Text }</p>
+				<p class="text-red-500">The transcription service returned an empty result.</p>
 			}
 		</div>
 	</div>
 }
 
+// formatTimestamp correctly formats float64 seconds into a HH:MM:SS,ms string.
 func formatTimestamp(seconds float64) string {
-	h := int(seconds / 3600)
-	m := int((seconds - float64(h*3600)) / 60)
-	s := int(seconds - float64(h*3600) - float64(m*60))
-	ms := int((seconds - float64(int(seconds))) * 1000)
+	d := time.Duration(seconds * float64(time.Second))
+	h := d / time.Hour
+	d -= h * time.Hour
+	m := d / time.Minute
+	d -= m * time.Minute
+	s := d / time.Second
+	d -= s * time.Second
+	ms := d / time.Millisecond
 	return fmt.Sprintf("%02d:%02d:%02d,%03d", h, m, s, ms)
 }
 
