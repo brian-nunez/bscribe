@@ -11,9 +11,9 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/brian-nunez/go-echo-starter-template/views/components/button"
-	"github.com/brian-nunez/go-echo-starter-template/views/components/icon"
-	"github.com/brian-nunez/go-echo-starter-template/views/utils"
+	"github.com/brian-nunez/bscribe/views/components/button"
+	"github.com/brian-nunez/bscribe/views/components/icon"
+	"github.com/brian-nunez/bscribe/views/utils"
 	"strconv"
 )
 
@@ -555,7 +555,7 @@ func Script() templ.Component {
 			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<script defer src=\"/assets/js/toast.min.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<script defer src=\"/assets/js/templui/toast.min.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,7 +1,7 @@
 package httpserver
 
 import (
-	"github.com/brian-nunez/go-echo-starter-template/internal/handlers/errors"
+	"github.com/brian-nunez/bscribe/internal/handlers/errors"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -17,6 +17,7 @@ func New() *ServerBuilder {
 }
 
 func (b *ServerBuilder) WithDefaultMiddleware() *ServerBuilder {
+	b.e.Use(middleware.Gzip())
 	b.e.Use(middleware.Recover())
 	b.e.Use(middleware.RequestID())
 	b.e.Use(middleware.CORS())
