@@ -1,12 +1,27 @@
 package pages
 
 import (
+	"fmt"
 	"github.com/brian-nunez/bscribe/views/components/badge"
 	"github.com/brian-nunez/bscribe/views/components/button"
 
 	icons "github.com/bryanvaz/go-templ-lucide-icons"
 )
 
+// TranscriptionSegment represents one segment of the transcribed audio.
+type TranscriptionSegment struct {
+	Start float64 `json:"start"`
+	End   float64 `json:"end"`
+	Text  string  `json:"text"`
+}
+
+// TranscriptionResponse is the expected JSON structure from the inference service.
+type TranscriptionResponse struct {
+	Segments []TranscriptionSegment `json:"segments"`
+	Text     string                 `json:"text"`
+}
+
+// Transcribe is the main page component.
 templ Transcribe() {
 	@Layout() {
 		<div class="min-h-screen flex flex-col transition-colors duration-300 bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 font-sans">
@@ -28,37 +43,120 @@ templ Transcribe() {
 					<p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-12">
 						Professional grade transcription engine focused on speed, accuracy, and speaker identification. Drag and drop to get started.
 					</p>
-					<div class="w-full max-w-3xl">
-						@UploadArea()
-						<div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-							@button.Button(button.Props{
-								Class: "bg-primary text-white hover:brightness-110 shadow-lg shadow-primary/20 hover:shadow-primary/40 transform hover:-translate-y-0.5",
-							}) {
-								Start Upload
-								@icons.ArrowRight(templ.Attributes{"class": "ml-2 w-5 h-5"})
-							}
-							@button.Button(button.Props{
-								Variant: button.VariantOutline,
-								Class:   "border-gray-300 dark:border-white/20 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10",
-							}) {
-								My Transcripts
-							}
-						</div>
+
+					<!-- This container will be the target for all HTMX swaps. -->
+					<div id="upload-widget-container" class="w-full max-w-3xl">
+						@UploadWidget()
 					</div>
+
 					@StatsRow()
 				</div>
 			</main>
 			@Footer()
 		</div>
 		<script>
-		const themeToggle = document.getElementById('theme-toggle');
-		const html = document.documentElement;
-		themeToggle.addEventListener('click', () => {
-			html.classList.toggle('dark');
-		});
+			// Basic theme toggle script
+			document.addEventListener('DOMContentLoaded', () => {
+				const themeToggle = document.getElementById('theme-toggle');
+				const html = document.documentElement;
+				themeToggle.addEventListener('click', () => {
+					html.classList.toggle('dark');
+				});
+			});
 		</script>
 	}
 }
+
+// UploadWidget is a form that submits when a file is selected.
+templ UploadWidget() {
+	<form
+		hx-post="/api/v1/upload"
+		hx-encoding="multipart/form-data"
+		hx-target="#upload-widget-container"
+		hx-swap="innerHTML"
+		hx-indicator="#upload-progress-indicator"
+	>
+		<div class="group relative w-full h-64 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-2xl bg-white/50 dark:bg-surface-dark hover:bg-white/80 dark:hover:bg-white/5 hover:border-primary dark:hover:border-primary transition-all duration-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden backdrop-blur-sm">
+			<input
+				name="file-upload"
+				type="file"
+				accept="audio/*"
+				class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+				onchange="this.form.requestSubmit()"
+			/>
+			<div class="z-10 flex flex-col items-center transition-transform duration-300 group-hover:scale-105 pointer-events-none">
+				<div class="p-4 rounded-full bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-black transition-colors">
+					@icons.CloudUpload(templ.Attributes{"class": "w-10 h-10"})
+				</div>
+				<p class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Drag & drop or click to upload</p>
+				<p class="text-sm text-gray-500 dark:text-gray-400">Supports MP3, WAV, M4A (Max 100MB)</p>
+			</div>
+		</div>
+		<div id="upload-progress-indicator" class="htmx-indicator w-full p-8">
+			<h3 class="text-lg font-semibold mb-2">Uploading...</h3>
+			<div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+				<div class="bg-primary h-2.5 rounded-full animate-pulse" style="width: 100%"></div>
+			</div>
+		</div>
+	</form>
+}
+
+// TranscriptionProgress is the loading state shown after upload.
+templ TranscriptionProgress(filename string) {
+	<div
+		hx-get={ fmt.Sprintf("/api/v1/transcription/%s", filename) }
+		hx-trigger="load delay:500ms"
+		hx-swap="innerHTML"
+		hx-target="#upload-widget-container"
+		class="w-full max-w-3xl text-center"
+	>
+		<h2 class="text-2xl font-bold mb-4">Transcribing <span class="text-primary">{ filename }</span>...</h2>
+		<div class="bg-white dark:bg-surface-dark p-6 rounded-lg shadow-lg animate-pulse">
+			<div class="space-y-4">
+				<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto"></div>
+				<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto"></div>
+				<div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5 mx-auto"></div>
+			</div>
+		</div>
+	</div>
+}
+
+// TranscriptionResult is the final display of the transcribed text.
+templ TranscriptionResult(filename string, data TranscriptionResponse) {
+	<div class="w-full max-w-4xl text-left">
+		<h2 class="text-3xl font-bold mb-6">Transcription for <span class="text-primary">{ filename }</span></h2>
+		<div class="bg-white dark:bg-surface-dark p-6 rounded-lg shadow-lg">
+			if data.Text == "" && len(data.Segments) == 0 {
+				<p class="text-red-500">The transcription service returned an empty or invalid result.</p>
+			} else if len(data.Segments) > 0 {
+				<div class="space-y-4">
+					for _, segment := range data.Segments {
+						<div class="flex items-start space-x-4">
+							<div class="font-mono text-sm text-gray-500 dark:text-gray-400 w-28 flex-shrink-0">
+								{ formatTimestamp(segment.Start) }
+							</div>
+							<p class="font-mono text-sm text-gray-800 dark:text-gray-200">
+								{ segment.Text }
+							</p>
+						</div>
+					}
+				</div>
+			} else {
+				<p class="font-mono text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{ data.Text }</p>
+			}
+		</div>
+	</div>
+}
+
+func formatTimestamp(seconds float64) string {
+	h := int(seconds / 3600)
+	m := int((seconds - float64(h*3600)) / 60)
+	s := int(seconds - float64(h*3600) - float64(m*60))
+	ms := int((seconds - float64(int(seconds))) * 1000)
+	return fmt.Sprintf("%02d:%02d:%02d,%03d", h, m, s, ms)
+}
+
+// --- Unchanged components below ---
 
 templ Navbar() {
 	<nav class="w-full border-b border-gray-200 dark:border-white/10 backdrop-blur-md fixed top-0 z-50 bg-background-light/80 dark:bg-background-dark/80">
@@ -89,20 +187,6 @@ templ Navbar() {
 			</div>
 		</div>
 	</nav>
-}
-
-templ UploadArea() {
-	<div class="group relative w-full h-64 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-2xl bg-white/50 dark:bg-surface-dark hover:bg-white/80 dark:hover:bg-white/5 hover:border-primary dark:hover:border-primary transition-all duration-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden backdrop-blur-sm">
-		<input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" type="file"/>
-		<div class="z-10 flex flex-col items-center transition-transform duration-300 group-hover:scale-105">
-			<div class="p-4 rounded-full bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-black transition-colors">
-				@icons.CloudUpload(templ.Attributes{"class": "w-10 h-10"})
-			</div>
-			<p class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Drag & drop or click to upload</p>
-			<p class="text-sm text-gray-500 dark:text-gray-400">Supports MP3, WAV, M4A (Max 100MB)</p>
-		</div>
-		<div class="absolute inset-0 opacity-0 group-hover:opacity-10 dark:opacity-0 dark:group-hover:opacity-5 transition-opacity duration-500 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]"></div>
-	</div>
 }
 
 templ StatsRow() {
