@@ -98,7 +98,7 @@ func Transcribe() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<h1 class=\"text-5xl md:text-7xl font-display font-extrabold tracking-tight mb-6 leading-tight\">Turn your audio into\u00a0<br class=\"hidden md:block\"><span class=\"text-primary drop-shadow-md\">structured text.</span></h1><p class=\"text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-12\">Professional grade transcription engine focused on speed, accuracy, and speaker identification. Drag and drop to get started.</p><!-- This container will be the target for all HTMX swaps. --><div id=\"upload-widget-container\" class=\"w-full max-w-3xl\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<h1 class=\"text-5xl md:text-7xl font-display font-extrabold tracking-tight mb-6 leading-tight\">Turn your audio into<br class=\"hidden md:block\"><span class=\"text-primary drop-shadow-md\">structured text.</span></h1><p class=\"text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mb-12\">Transform recordings into structured data instantly. Powered by a transcription engine built for speed, accuracy, and speaker detection.</p><!-- This container will be the target for all HTMX swaps. --><div id=\"upload-widget-container\" class=\"w-full max-w-3xl\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
