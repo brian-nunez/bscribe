@@ -12,7 +12,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"fmt"
-	"github.com/brian-nunez/go-echo-starter-template/views/utils"
+	"github.com/brian-nunez/bscribe/views/utils"
 	"strings"
 )
 
@@ -639,7 +639,7 @@ func Script() templ.Component {
 			templ_7745c5c3_Var24 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<script defer src=\"/assets/js/avatar.min.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<script defer src=\"/assets/js/templui/avatar.min.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -3,7 +3,7 @@ package tabs
 
 import (
 	"context"
-	"github.com/brian-nunez/go-echo-starter-template/views/utils"
+	"github.com/brian-nunez/bscribe/views/utils"
 )
 
 type Props struct {
@@ -163,5 +163,5 @@ func IDFromContext(ctx context.Context) string {
 }
 
 templ Script() {
-	<script defer src="/assets/js/tabs.min.js"></script>
+	<script defer src="/assets/js/templui/tabs.min.js"></script>
 }

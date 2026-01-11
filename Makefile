@@ -14,7 +14,7 @@ server:
 		--misc.clean_on_exit true
 
 tailwind:
-	tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --watch
+	tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --watch --minify --optimize
 
 dev:
 	make -j3 templ tailwind server
