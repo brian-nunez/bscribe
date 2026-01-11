@@ -45,7 +45,7 @@ func UploadHandler(c echo.Context) error {
 	writer := multipart.NewWriter(&requestBody)
 	part, _ := writer.CreateFormFile("file", fileHeader.Filename)
 	io.Copy(part, src)
-	writer.WriteField("response-format", "verbose_json")
+	writer.WriteField("response_format", "verbose_json")
 	writer.Close()
 
 	// Asynchronously call the transcription service
