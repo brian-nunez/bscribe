@@ -54,7 +54,13 @@ func UploadHandler(c echo.Context) error {
 			fmt.Fprintf(os.Stderr, "[Transcription Error] %s: %v\n", msg, err)
 		}
 
-		req, err := http.NewRequest("POST", "http://192.168.50.241:8080/inference", &requestBody)
+		// Get transcription URL from environment variable, with a fallback for local dev.
+		transcriptionURL := os.Getenv("TRANSCRIPTION_SERVICE_URL")
+		if transcriptionURL == "" {
+			transcriptionURL = "http://192.168.50.241:8081/inference"
+		}
+
+		req, err := http.NewRequest("POST", transcriptionURL, &requestBody)
 		if err != nil {
 			logError("failed to create transcription request", err)
 			transcriptionCache.Store(uniqueFilename, pages.TranscriptionResponse{Text: "Error: Could not create request for transcription service."})
