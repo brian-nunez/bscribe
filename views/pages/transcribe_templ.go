@@ -17,14 +17,12 @@ import (
 	icons "github.com/bryanvaz/go-templ-lucide-icons"
 )
 
-// TranscriptionSegment represents one segment of the transcribed audio.
 type TranscriptionSegment struct {
 	Start float64 `json:"start"`
 	End   float64 `json:"end"`
 	Text  string  `json:"text"`
 }
 
-// TranscriptionResponse is the expected JSON structure from the inference service.
 type TranscriptionResponse struct {
 	Segments []TranscriptionSegment `json:"segments"`
 	Text     string                 `json:"text"`
@@ -160,7 +158,7 @@ func UploadWidget() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<form hx-post=\"/api/v1/upload\" hx-encoding=\"multipart/form-data\" hx-target=\"#upload-widget-container\" hx-swap=\"innerHTML\" hx-indicator=\"#upload-progress-indicator\"><div class=\"group relative w-full h-64 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-2xl bg-white/50 dark:bg-surface-dark hover:bg-white/80 dark:hover:bg-white/5 hover:border-primary dark:hover:border-primary transition-all duration-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden backdrop-blur-sm\"><input name=\"file-upload\" type=\"file\" accept=\"audio/*\" class=\"absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20\" onchange=\"this.form.requestSubmit()\"><div class=\"z-10 flex flex-col items-center transition-transform duration-300 group-hover:scale-105 pointer-events-none\"><div class=\"p-4 rounded-full bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-black transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<form hx-post=\"/api/v1/upload\" hx-encoding=\"multipart/form-data\" hx-target=\"#upload-widget-container\" hx-swap=\"innerHTML\" hx-indicator=\"#upload-progress-indicator\"><div class=\"group relative w-full h-64 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-2xl bg-white/50 dark:bg-surface-dark hover:bg-white/80 dark:hover:bg-white/5 hover:border-primary dark:hover:border-primary transition-all duration-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden backdrop-blur-sm\"><input name=\"file-upload\" type=\"file\" accept=\".wav,.mp3\" class=\"absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20\" onchange=\"this.form.requestSubmit()\"><div class=\"z-10 flex flex-col items-center transition-transform duration-300 group-hover:scale-105 pointer-events-none\"><div class=\"p-4 rounded-full bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-black transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -205,7 +203,7 @@ func TranscriptionProgress(filename string) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/api/v1/transcription/%s", filename))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 108, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 106, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -218,7 +216,7 @@ func TranscriptionProgress(filename string) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(filename)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 114, Col: 88}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 112, Col: 88}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -261,7 +259,7 @@ func TranscriptionResult(filename string, data TranscriptionResponse) templ.Comp
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(filename)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 130, Col: 111}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 128, Col: 111}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -279,7 +277,7 @@ func TranscriptionResult(filename string, data TranscriptionResponse) templ.Comp
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(data.Text)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 134, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 132, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -302,7 +300,7 @@ func TranscriptionResult(filename string, data TranscriptionResponse) templ.Comp
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(formatTimestamp(segment.Start))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 147, Col: 41}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 145, Col: 41}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -315,7 +313,7 @@ func TranscriptionResult(filename string, data TranscriptionResponse) templ.Comp
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(formatTimestamp(segment.End))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 147, Col: 78}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 145, Col: 78}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -328,7 +326,7 @@ func TranscriptionResult(filename string, data TranscriptionResponse) templ.Comp
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(segment.Text)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 149, Col: 71}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 147, Col: 71}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -351,7 +349,7 @@ func TranscriptionResult(filename string, data TranscriptionResponse) templ.Comp
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(data.Text)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 155, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 153, Col: 46}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -518,7 +516,7 @@ func StatItem(value, label string) templ.Component {
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 212, Col: 77}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 210, Col: 77}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -531,7 +529,7 @@ func StatItem(value, label string) templ.Component {
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 213, Col: 100}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 211, Col: 100}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -580,7 +578,7 @@ func NavLink(text, href string, active bool) templ.Component {
 		var templ_7745c5c3_Var22 templ.SafeURL
 		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 219, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 217, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
@@ -606,7 +604,7 @@ func NavLink(text, href string, active bool) templ.Component {
 		var templ_7745c5c3_Var24 string
 		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(text)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 224, Col: 8}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/pages/transcribe.templ`, Line: 222, Col: 8}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
