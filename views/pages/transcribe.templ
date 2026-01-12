@@ -103,8 +103,8 @@ templ UploadWidget() {
 // TranscriptionProgress is the loading state shown after upload.
 templ TranscriptionProgress(filename string) {
 	<div
-		hx-get={ fmt.Sprintf("/api/v1/transcription/%s", filename) }
-		hx-trigger="load delay:500ms"
+		hx-post={ fmt.Sprintf("/api/v1/transcription/%s", filename) }
+		hx-trigger="load delay:1000ms"
 		hx-swap="innerHTML"
 		hx-target="#upload-widget-container"
 		class="w-full max-w-3xl text-center"
@@ -215,8 +215,7 @@ templ StatItem(value, label string) {
 templ NavLink(text, href string, active bool) {
 	<a
 		href={ templ.SafeURL(href) }
-		target="_blank"
-		class={ "font-medium transition-colors", 
+		class={ "font-medium transition-colors",
 		templ.KV("text-gray-900 dark:text-white hover:text-primary", active),
 		templ.KV("text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-white", !active) }
 	>

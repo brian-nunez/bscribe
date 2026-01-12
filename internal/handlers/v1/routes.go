@@ -11,5 +11,5 @@ func RegisterRoutes(e *echo.Echo) {
 	v1Group := e.Group("/api/v1")
 	v1Group.GET("/health", HealthHandler)
 	v1Group.POST("/upload", UploadHandler)
-	v1Group.GET("/transcription/:filename", TranscriptionResultHandler)
+	v1Group.POST("/transcription/:filename", TranscriptionResultHandler)
 }

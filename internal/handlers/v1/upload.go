@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/brian-nunez/bscribe/views/pages"
@@ -54,10 +55,9 @@ func UploadHandler(c echo.Context) error {
 			fmt.Fprintf(os.Stderr, "[Transcription Error] %s: %v\n", msg, err)
 		}
 
-		// Get transcription URL from environment variable, with a fallback for local dev.
 		transcriptionURL := os.Getenv("TRANSCRIPTION_SERVICE_URL")
 		if transcriptionURL == "" {
-			transcriptionURL = "http://192.168.50.241:8081/inference"
+			transcriptionURL = "http://10.0.0.114:8081/inference"
 		}
 
 		req, err := http.NewRequest("POST", transcriptionURL, &requestBody)
@@ -94,7 +94,23 @@ func UploadHandler(c echo.Context) error {
 		transcriptionCache.Store(uniqueFilename, transcriptionData)
 	}()
 
-	// Immediately return the progress component, which will start polling
+	c.Response().Header().Set("Content-Type", "text/html; charset=utf-8")
+	c.Response().Header().Set("X-Accel-Buffering", "no")
+	c.Response().Header().Set("Cache-Control", "no-cache")
+	c.Response().Header().Set("Connection", "keep-alive")
+	c.Response().WriteHeader(http.StatusOK)
+
+	if f, ok := c.Response().Writer.(http.Flusher); ok {
+		f.Flush()
+	}
+
+	padding := strings.Repeat(" ", 2048)
+	c.Response().Writer.Write([]byte(padding + "\n"))
+
+	if f, ok := c.Response().Writer.(http.Flusher); ok {
+		f.Flush()
+	}
+
 	return pages.TranscriptionProgress(uniqueFilename).Render(c.Request().Context(), c.Response().Writer)
 }
 
