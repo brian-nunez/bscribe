@@ -1,0 +1,32 @@
+services:
+  audioscribe:
+    image: briannunez/bscribe:v1.0.8
+    container_name: bscribe
+    network_mode: "host"
+    environment:
+      - TRANSCRIPTION_SERVICE_URL=http://127.0.0.1:8081/inference
+    restart: unless-stopped
+
+  whisper:
+    image: ghcr.io/ggml-org/whisper.cpp:main
+    container_name: whisper-server
+    network_mode: "host"
+    volumes:
+      - ./models:/models
+      - ./audios:/audios
+    
+    entrypoint: /bin/sh -c
+    
+    command: ["whisper-server --host 0.0.0.0 --port 8081 -m /models/ggml-base.bin --print-realtime --print-progress"]
+    restart: unless-stopped
+
+  consul-client:
+    image: hashicorp/consul:1.18
+    container_name: consul-client
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./consul-data:/consul/data
+      - ./consul-config:/consul/config
+    command: agent -config-dir=/consul/config
+
