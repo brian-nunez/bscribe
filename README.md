@@ -4,6 +4,8 @@
 > **This project has been decommissioned and is no longer maintained.**
 > No further development, bug fixes, or security patches will be provided. This repository is archived for reference purposes only. Use at your own risk.
 
+![BScribe Screenshot](./image.png)
+
 ---
 
 ## Overview
